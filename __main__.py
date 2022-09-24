@@ -1,4 +1,5 @@
 """An AWS Python Pulumi program"""
+from curses import keyname
 import os
 import mimetypes
 from re import I
@@ -14,8 +15,11 @@ ec2_image_device_type = ["ebs"]
 ec2_image_name_prefix = ["ubuntu-*"]
 ec2_instance_size = "t2.micro"
 ec2_instance_name = "aws-ec2-ubuntu"
-ec2_keypair_name = "pulumi_test_key"
+ec2_keypair_name = "blackmamba"
 ec2_ssh_port = 212
+ec2_user_data = """#!/bin/bash
+            sed  's/^#\?Port 22$/Port 2222/'  /etc/ssh/sshd_config
+            systemctl restart sshd"""
 
 # Create S3 Bucket with page
 bucket = s3.Bucket('my-bucket1', 
@@ -57,5 +61,15 @@ my_ec2_ami = ec2.get_ami(
             ),
         ],
 )
+
+my_ec2_instance = ec2.Instance(
+            ec2_instance_name,
+            ami=my_ec2_ami.id,
+            key_name=ec2_keypair_name,
+            instance_type=ec2_instance_size,
+            user_data=ec2_user_data,
+            )
+
+
 
 export("Image found: ", my_ec2_ami.name)
