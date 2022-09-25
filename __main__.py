@@ -18,7 +18,7 @@ ec2_instance_name = "aws-ec2-ubuntu"
 ec2_keypair_name = "blackmamba"
 ec2_ssh_port = 212
 ec2_user_data = """#!/bin/bash
-            sed  's/^#\?Port 22$/Port 2222/'  /etc/ssh/sshd_config
+            sed  's/^#\?Port 22$/Port 2212/'  /etc/ssh/sshd_config
             systemctl restart sshd"""
 
 # Create S3 Bucket with page
@@ -62,6 +62,18 @@ my_ec2_ami = ec2.get_ami(
         ],
 )
 
+my_security_group = ec2.SecurityGroup(
+    description="Allow SSH on port 2212",
+    ingress=[ec2.SecurityGroupIngressArgs(
+        from_port=0,
+        to_port=2212,
+        cidr_blocks=["0.0.0.0/0"],
+        ipv6_cidr_blocks=["::/0"],
+        protocol="tcp",
+    )
+    ]
+)
+
 my_ec2_instance = ec2.Instance(
             ec2_instance_name,
             ami=my_ec2_ami.id,
@@ -69,7 +81,5 @@ my_ec2_instance = ec2.Instance(
             instance_type=ec2_instance_size,
             user_data=ec2_user_data,
             )
-
-
 
 export("Image found: ", my_ec2_ami.name)
