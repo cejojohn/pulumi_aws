@@ -81,6 +81,7 @@ my_ec2_instance = ec2.Instance(
             key_name=ec2_keypair_name,
             instance_type=ec2_instance_size,
             user_data=ec2_user_data,
+            security_groups=[my_security_group.id],
             )
 
 export("Image found: ", my_ec2_ami.name)
