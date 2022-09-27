@@ -63,6 +63,7 @@ my_ec2_ami = ec2.get_ami(
 )
 
 my_security_group = ec2.SecurityGroup(
+    "mySecurityGroup",
     description="Allow SSH on port 2212",
     ingress=[ec2.SecurityGroupIngressArgs(
         from_port=0,
