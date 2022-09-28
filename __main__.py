@@ -66,13 +66,20 @@ my_security_group = ec2.SecurityGroup(
     "mySecurityGroup",
     description="Allow SSH on port 2212",
     ingress=[ec2.SecurityGroupIngressArgs(
-        from_port=0,
+        from_port=2212,
         to_port=2212,
         cidr_blocks=["0.0.0.0/0"],
         ipv6_cidr_blocks=["::/0"],
         protocol="tcp",
-    )
-    ]
+        ),
+        ec2.SecurityGroupIngressArgs(
+        from_port=22,
+        to_port=22,
+        cidr_blocks=["0.0.0.0/0"],
+        ipv6_cidr_blocks=["::/0"],
+        protocol="tcp",
+        ),
+    ],
 )
 
 my_ec2_instance = ec2.Instance(
@@ -81,7 +88,7 @@ my_ec2_instance = ec2.Instance(
             key_name=ec2_keypair_name,
             instance_type=ec2_instance_size,
             user_data=ec2_user_data,
-            security_groups=[my_security_group.id],
+            vpc_security_group_ids=[my_security_group.id],
             )
 
 export("Image found: ", my_ec2_ami.name)
