@@ -18,8 +18,9 @@ ec2_instance_name = "aws-ec2-ubuntu"
 ec2_keypair_name = "blackmamba"
 ec2_ssh_port = 212
 ec2_user_data = """#!/bin/bash
-            sed  's/^#\?Port 22$/Port 2212/'  /etc/ssh/sshd_config
-            systemctl restart sshd"""
+sed -i 's/^#\?Port 22$/Port 2212/'  /etc/ssh/sshd_config
+systemctl restart sshd
+"""
 
 # Create S3 Bucket with page
 bucket = s3.Bucket('my-bucket1', 
