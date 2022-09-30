@@ -63,6 +63,8 @@ my_ec2_ami = ec2.get_ami(
         ],
 )
 
+export("Image used: ", my_ec2_ami.name)
+
 my_security_group = ec2.SecurityGroup(
     "mySecurityGroup",
     description="Allow SSH on port 2212",
@@ -81,6 +83,14 @@ my_security_group = ec2.SecurityGroup(
         protocol="tcp",
         ),
     ],
+    egress=[ec2.SecurityGroupEgressArgs(
+        from_port=0,
+        to_port=0,
+        protocol="-1",
+        cidr_blocks=["0.0.0.0/0"],
+        ipv6_cidr_blocks=["::/0"],
+        ),
+    ],
 )
 
 my_ec2_instance = ec2.Instance(
@@ -92,4 +102,4 @@ my_ec2_instance = ec2.Instance(
             vpc_security_group_ids=[my_security_group.id],
             )
 
-export("Image found: ", my_ec2_ami.name)
+export("Instance IP: ", my_ec2_instance.public_ip)
