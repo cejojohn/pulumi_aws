@@ -20,7 +20,9 @@ ec2_ssh_port = 212
 ec2_user_data = """#!/bin/bash
 echo "test data" >> ~/user_data_generated_test
 sed -i 's/^#\?Port 22$/Port 2212/'  /etc/ssh/sshd_config
-systemctl restart sshd
+#mkdir /etc/systemd/system/ssh.socket.d
+#echo 'Port 2212' > /etc/systemd/system/ssh.socket.d/addresses.conf
+systemctl restart ssh
 """
 
 # Create S3 Bucket with page
