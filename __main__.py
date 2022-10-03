@@ -1,9 +1,6 @@
 """An AWS Python Pulumi program"""
-from curses import keyname
 import os
 import mimetypes
-from re import I
-from warnings import filters
 
 from pulumi import export, FileAsset
 from pulumi_aws import s3
